@@ -11,7 +11,9 @@ import com.sanks.blog.server.storage.BlogStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhangpeng
@@ -32,6 +34,7 @@ public class BlogService {
     }
 
     public List<Blog> query() {
-        return blogStorage.query();
+        return blogStorage.query().stream().sorted(Comparator.comparing(Blog::getCreatedTime).reversed()).collect
+                (Collectors.toList());
     }
 }
