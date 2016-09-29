@@ -1,0 +1,65 @@
+# 允许跨域访问
+#corsFilter:
+#    order: 10
+#    allowedOrigins:
+#        - http://zhenguanyu.com
+#        - http://zhenguanyu.com:3000
+#    supportedMethods:
+#        - GET
+#        - POST
+#        - DELETE
+#        - OPTIONS
+#        - HEAD
+#        - PUT
+
+# authFilter 配置
+#authFilter:
+#    order: 150
+#    urlPatterns:
+#        - /*
+#    supportOrganizations:
+#        - people
+#        - temp
+
+# Web Server 配置
+server:
+    port: 8080
+    tomcat:
+        maxThreads: 500
+
+# multipart 配置
+multipart:
+    maxFileSize: 5MB     # multipart单个文件大小限制
+    maxRequestSize: 10MB # multipart整个request的大小限制
+    fileSizeThreshold: 1MB # 大于fileSizeThreshold的在解析过程中会写磁盘, 否则是纯内存操作
+
+
+# MySQL 连接配置
+spring.datasource:
+    username: root
+    password:
+    testOnBorrow: true
+    validationQuery: SELECT 1
+
+spring.profiles.active: dev
+
+---
+# 开发环境
+spring:
+    profiles: dev
+
+#logging.access.enabled: false
+
+spring.datasource.url: jdbc:mysql://localhost:3306/blog
+
+
+---
+# 线上服务环境
+spring:
+    profiles: online
+
+spring.datasource.url: jdbc:mysql://localhost:3306/blog
+#spring.datasource.url: jdbc:mysql://mysql-tutor-writer:3306/tutor_cms_episode
+
+#logging.config: classpath:log4j2.online.yaml
+#logging.access.directory: /home/shared/log

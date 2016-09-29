@@ -1,0 +1,77 @@
+Configuration:
+  properties:
+    property:
+      - name: logPath
+        value: /home/shared/log/
+      - name: filename
+        value: tutor-cms-episode.log
+      - name: pattern
+        value: "%d{yyyy-MM-dd HH:mm:ss} [%p] [%t] [%c] %m%n"
+      - name: dsn
+        value: "http://63cd3841d81f4ac999e9317460f397eb:fa51e7c5a3da4016903e5ab62f86ba0a@sentry.zhenguanyu.com/613"
+
+  status: "info"
+  Appenders:
+    RollingRandomAccessFile:
+      - name: "FileAppender"
+        fileName: "${logPath}${filename}"
+        filePattern: "${logPath}${filename}.%d{yyyy-MM-dd}"
+        PatternLayout:
+          pattern: "${pattern}"
+        Policies:
+          TimeBasedTriggeringPolicy: {}
+      - name: "AnalysisFileAppender"
+        fileName: "${logPath}analysis-${filename}"
+        filePattern: "${logPath}analysis-${filename}.%d{yyyy-MM-dd}"
+        PatternLayout:
+          pattern: "${pattern}"
+        Policies:
+          TimeBasedTriggeringPolicy: {}
+      - name: "HTTPRequestFileAppender"
+        fileName: "${logPath}http-request-${filename}"
+        filePattern: "${logPath}http-request-${filename}.%d{yyyy-MM-dd}"
+        PatternLayout:
+          pattern: "${pattern}"
+        Policies:
+          TimeBasedTriggeringPolicy: {}
+      - name: "RPCRequestFileAppender"
+        fileName: "${logPath}rpc-request-${filename}"
+        filePattern: "${logPath}rpc-request-${filename}.%d{yyyy-MM-dd}"
+        PatternLayout:
+          pattern: "${pattern}"
+        Policies:
+          TimeBasedTriggeringPolicy: {}
+    GELF:
+      name: "GELFAppender"
+      server: graylog-server
+      additionalFields: "environment=ONLINE,application=tutor-cms-episode"
+    Raven:
+      name: "Sentry"
+      dsn: "${dsn}"
+  Loggers:
+    AsyncLogger:
+      - name: RequestLogger
+        level: info
+        additivity: false
+        AppenderRef:
+          - ref: HTTPRequestFileAppender
+          - ref: GELFAppender
+      - name: "RpcRequestLogger"
+        level: "info"
+        additivity: false
+        AppenderRef:
+          - ref: RPCRequestFileAppender
+          - ref: GELFAppender
+      - name: AnalysisLogger
+        level: info
+        additivity: false
+        AppenderRef:
+          - ref: AnalysisFileAppender
+          - ref: GELFAppender
+    AsyncRoot:
+      level: "info"
+      AppenderRef:
+        - ref: "FileAppender"
+        - ref: "GELFAppender"
+        - ref: "Sentry"
+          level: "error"
