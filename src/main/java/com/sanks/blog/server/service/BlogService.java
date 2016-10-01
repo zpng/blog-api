@@ -37,4 +37,9 @@ public class BlogService {
         return blogStorage.query().stream().sorted(Comparator.comparing(Blog::getCreatedTime).reversed()).collect
                 (Collectors.toList());
     }
+
+    public Blog update(Blog blog) {
+        blogStorage.update(blog);
+        return blogStorage.get(blog.getId());
+    }
 }

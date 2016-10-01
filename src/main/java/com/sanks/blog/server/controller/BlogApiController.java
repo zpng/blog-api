@@ -43,6 +43,13 @@ public class BlogApiController {
 
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/{id}",method = RequestMethod.POST)
+    Blog update(@PathVariable int id, @RequestBody Blog blog) {
+        //todo id check
+        return blogService.update(blog);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/{id}")
     Blog get(@PathVariable int id) {
         return blogService.get(id);

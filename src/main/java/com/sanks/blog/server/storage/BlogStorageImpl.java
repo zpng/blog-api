@@ -35,13 +35,14 @@ public class BlogStorageImpl implements BlogStorage {
         blog.setUpdatedTime(resultSet.getLong("updatedTime"));
         return blog;
     };
+
     @Autowired
     private NamedParameterJdbcOperations jdbcTemplate;
 
     @Override
     public Blog get(int id) {
-        return jdbcTemplate.queryForObject("select * from blog where id = :id", Collections.singletonMap("id", id),
-                BLOG_ROW_MAPPER);
+        return jdbcTemplate.queryForObject("select * from blog where id = :id",
+                Collections.singletonMap("id", id), BLOG_ROW_MAPPER);
     }
 
     @Override
@@ -51,13 +52,24 @@ public class BlogStorageImpl implements BlogStorage {
         blog.setUpdatedTime(now);
         SqlParameterSource parameter = new BeanPropertySqlParameterSource(blog);
         KeyHolder keyholder = new GeneratedKeyHolder();
-        jdbcTemplate.update("insert into blog set authorId = :authorId, title = :title, content = :content, " +
-                "createdTime = :createdTime, updatedTime = :updatedTime", parameter, keyholder);
+        jdbcTemplate
+                .update("insert into blog set authorId = :authorId, title = :title, content = :content, " +
+                                "createdTime = :createdTime, updatedTime = :updatedTime", parameter,
+                        keyholder);
         return keyholder.getKey().intValue();
     }
 
     @Override
     public List<Blog> query() {
         return jdbcTemplate.query("select * from blog", BLOG_ROW_MAPPER);
+    }
+
+    @Override
+    public boolean update(Blog blog) {
+        blog.setUpdatedTime(System.currentTimeMillis());
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(blog);
+        return jdbcTemplate.update("update blog set authorId = :authorId, title = :title, " +
+                "content = :content, updatedTime = :updatedTime where id = :id", parameterSource) >
+                0;
     }
 }

@@ -19,4 +19,6 @@ public interface BlogStorage {
     int create(Blog blog);
 
     List<Blog> query();
+
+    boolean update(Blog blog);
 }
