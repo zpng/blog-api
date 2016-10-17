@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -36,13 +35,13 @@ public class BlogApiController extends BaseController {
 
 
     @RequestMapping()
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000,http://www.sanksblog.com")
     List<Blog> query() {
         ipService.addCount(getIp(), 1, 0, 0, 0);
         return blogService.query();
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000,http://www.sanksblog.com")
     @RequestMapping(method = RequestMethod.POST)
     Blog create(@RequestBody Blog blog) {
         ipService.addCount(getIp(), 0, 0, 1, 0);
@@ -50,7 +49,7 @@ public class BlogApiController extends BaseController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000,http://www.sanksblog.com")
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     Blog update(@PathVariable int id, @RequestBody Blog blog) {
         //todo id check
@@ -58,7 +57,7 @@ public class BlogApiController extends BaseController {
         return blogService.update(blog);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000,http://www.sanksblog.com")
     @RequestMapping(value = "/{id}")
     Blog get(@PathVariable int id) {
         ipService.addCount(getIp(), 0, 1, 0, 0);
